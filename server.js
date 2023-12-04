@@ -8,41 +8,44 @@ const userRoute = require('./routes/userRoute');
 const errorHandler = require('./middleware/errorMiddleware');
 const http = require('http');
 const socketIO = require('socket.io');
-const socketController = require('./controllers/socketController'); // Import socketController
-const socketRoutes = require('./routes/socketRoutes'); // Import socketRoutes
+const socketController = require('./controllers/socketController');
+const socketRoutes = require('./routes/socketRoutes');
+
 const app = express();
 const httpServer = http.createServer(app);
 
-// Use the same http server instance for Socket.IO
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000,https://meek-babka-71c876.netlify.app/,http://192.168.1.6:3000';
+
 const io = new socketIO.Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000' || 'https://meek-babka-71c876.netlify.app/', // Use an environment variable
+    origin: corsOrigin,
     methods: ['GET', 'POST'],
   },
 });
+
 io.on('connection', (socket) => {
   socketController.handleConnection(socket, io);
-})
-// Middlewares
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
+
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://meek-babka-71c876.netlify.app/', 'http://192.168.18.10:3000'],
+    origin: corsOrigin.split(','),
     credentials: true,
   })
 );
 
-// Routes
 app.use('/api/users', userRoute);
 app.use("/socket", socketRoutes);
+
 app.get('/', (req, res) => {
   res.send('Home Page');
 });
 
-// Error Handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
@@ -53,5 +56,4 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
   });
 });
 
-
-exports.io = io; // Export the Socket.IO instance so it can be used in socketRoutes.js
+exports.io = io;
