@@ -16,7 +16,7 @@ const httpServer = http.createServer(app);
 // Use the same http server instance for Socket.IO
 const io = new socketIO.Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000', // Use an environment variable
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000' || 'https://rhnew.vercel.app', // Use an environment variable
     methods: ['GET', 'POST'],
   },
 });
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://authz-app.vercel.app', 'http://192.168.18.10:3000'],
+    origin: ['http://localhost:3000', 'https://rhnew.vercel.app/', 'http://192.168.18.10:3000'],
     credentials: true,
   })
 );
