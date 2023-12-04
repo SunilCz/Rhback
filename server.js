@@ -16,7 +16,7 @@ const httpServer = http.createServer(app);
 // Use the same http server instance for Socket.IO
 const io = new socketIO.Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000' || 'https://rhnew.vercel.app', // Use an environment variable
+    origin: process.env.CORS_ORIGIN || 'https://rhnew.vercel.app', // Use an environment variable
     methods: ['GET', 'POST'],
   },
 });
