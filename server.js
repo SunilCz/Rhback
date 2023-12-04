@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'https://rhnew.vercel.app/', 'http://192.168.18.10:3000'],
+    origin: ['https://rhnew.vercel.app/'],
     credentials: true,
   })
 );
