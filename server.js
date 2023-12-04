@@ -16,7 +16,7 @@ const httpServer = http.createServer(app);
 // Use the same http server instance for Socket.IO
 const io = new socketIO.Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'https://rhnew.vercel.app', // Use an environment variable
+    origin: process.env.CORS_ORIGIN || 'https://656da3d4c564b13431346259--fantastic-taffy-ac6a95.netlify.app/', // Use an environment variable
     methods: ['GET', 'POST'],
   },
 });
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ['https://rhnew.vercel.app/'],
+    origin: ['https://656da3d4c564b13431346259--fantastic-taffy-ac6a95.netlify.app/'],
     credentials: true,
   })
 );
