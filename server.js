@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -16,24 +15,24 @@ const httpServer = http.createServer(app);
 // Use the same http server instance for Socket.IO
 const io = new socketIO.Server(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN || 'https://meek-babka-71c876.netlify.app/', // Use an environment variable
+    origin: 'https://meek-babka-71c876.netlify.app',
     methods: ['GET', 'POST'],
-  },
+    credentials: true
+  }
 });
 io.on('connection', (socket) => {
   socketController.handleConnection(socket, io);
-})
+});
+
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: ['https://meek-babka-71c876.netlify.app/'],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'https://meek-babka-71c876.netlify.app',
+  credentials: true
+}));
 
 // Routes
 app.use('/api/users', userRoute);
@@ -52,6 +51,5 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
-
 
 exports.io = io; // Export the Socket.IO instance so it can be used in socketRoutes.js
