@@ -1,6 +1,7 @@
+
 // socketController.js
 const Room = require("../models/roomModel");
-
+const Chat = require('../models/chatModel');
 // Store shared location data
 const sharedLocations = {};
 
@@ -46,6 +47,33 @@ const handleConnection = (socket, io) => {
       console.error('Error handling track location request:', error.message);
     }
   });
+  //chat room
+  socket.on('SendMessage', async (data) => {
+    try {
+      // Check if a chat document exists for the room, create one if not
+      let chat = await Chat.findOne({ roomId: data.roomId });
+      if (!chat) {
+        chat = new Chat({ roomId: data.roomId, messages: [] });
+      }
+
+      // Push the new message to the messages array
+      chat.messages.push({
+        senderId: data.senderId,
+        message: data.message,
+      });
+
+      // Save the chat document
+      await chat.save();
+
+
+      // Broadcast the message to all connected clients in the room
+      io.to(data.roomId).emit('ReceivedMessage', data);
+      console.log('Message emitted to all connected clients in the room.', data);
+    } catch (error) {
+      console.error('Error handling chat message:', error.message);
+    }
+  });
+
 };
 
 module.exports = {
