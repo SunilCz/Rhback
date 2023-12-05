@@ -119,31 +119,31 @@ const loginUser = asyncHandler(async (req, res) => {
   console.log(thisUserAgent);
   const allowedAgent = user.userAgent.includes(thisUserAgent);
 
-  if (!allowedAgent) {
-    // Genrate 6 digit code
-    const loginCode = Math.floor(100000 + Math.random() * 900000);
-    console.log(loginCode);
+  // if (!allowedAgent) {
+  //   // Genrate 6 digit code
+  //   const loginCode = Math.floor(100000 + Math.random() * 900000);
+  //   console.log(loginCode);
 
-    // Encrypt login code before saving to DB
-    const encryptedLoginCode = cryptr.encrypt(loginCode.toString());
+  //   // Encrypt login code before saving to DB
+  //   const encryptedLoginCode = cryptr.encrypt(loginCode.toString());
 
-    // Delete Token if it exists in DB
-    let userToken = await Token.findOne({ userId: user._id });
-    if (userToken) {
-      await userToken.deleteOne();
-    }
+  //   // Delete Token if it exists in DB
+  //   let userToken = await Token.findOne({ userId: user._id });
+  //   if (userToken) {
+  //     await userToken.deleteOne();
+  //   }
 
-    // Save Tokrn to DB
-    await new Token({
-      userId: user._id,
-      lToken: encryptedLoginCode,
-      createdAt: Date.now(),
-      expiresAt: Date.now() + 60 * (60 * 1000), // 60mins
-    }).save();
+  //   // Save Tokrn to DB
+  //   await new Token({
+  //     userId: user._id,
+  //     lToken: encryptedLoginCode,
+  //     createdAt: Date.now(),
+  //     expiresAt: Date.now() + 60 * (60 * 1000), // 60mins
+  //   }).save();
 
-    res.status(400);
-    throw new Error("New browser or device detected");
-  }
+  //   res.status(400);
+  //   throw new Error("New browser or device detected");
+  // }
 
   // Generate Token
   const token = generateToken(user._id);
